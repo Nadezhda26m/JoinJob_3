@@ -26,12 +26,8 @@ public class Toy {
         this.decreaseCount(1);
     }
 
-    protected boolean changeWeight(int newWeight) {
-        if (newWeight > 0 && newWeight < 100) {
-            this.weight = newWeight;
-            return true;
-        }
-        return false;
+    protected void changeWeight(int newWeight) { // 1..99
+        this.weight = newWeight;
     }
 
     public int getCount() {
@@ -40,6 +36,12 @@ public class Toy {
 
     public int getWeight() {
         return weight;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("id_%d %s #%d шт. вес = %d%%",
+                this.id, this.name, this.count, this.weight);
     }
 }
 
