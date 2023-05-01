@@ -7,13 +7,14 @@ public class Presenter {
     protected LogPrizesTXT log;
     public View view;
     private Random rand = new Random();
-    public Presenter (ModelDB model, LogPrizesTXT log, View currentView){
+
+    public Presenter(ModelDB model, LogPrizesTXT log, View currentView) {
         this.model = model;
         this.log = log;
         this.view = currentView;
     }
 
-    public void getRandomPrize(){ // не пустой список
+    public void getRandomPrize() { // не пустой список
         int indexPrize = this.getIndexRandomPrize();
         Toy prize = this.model.actualPresents.postponePrize(indexPrize);
         this.model.writeToFile();
@@ -21,12 +22,12 @@ public class Presenter {
         this.view.printText("Выигрыш: " + prize1);
     }
 
-    public void givePrize(){
+    public void givePrize() {
         String prize = this.log.getPrize();
         this.view.printText("Приз получен: " + prize);
     }
 
-    public void increaseCountToy(){
+    public void increaseCountToy() {
         this.view.printText("> Выберите игрушку и укажите количество " +
                 "игрушек для добавления");
         this.view.printPresents(this.model.actualPresents);
@@ -37,7 +38,7 @@ public class Presenter {
         this.view.printText("> Количество увеличено");
     }
 
-    public void decreaseCountToy(){
+    public void decreaseCountToy() {
         this.view.printText("> Выберите игрушку и укажите количество игрушек для удаления" +
                 "\n> Если останется меньше 1 шт., то игрушка будет удалена из списка");
         this.view.printPresents(this.model.actualPresents);
@@ -48,7 +49,8 @@ public class Presenter {
         if (f) this.view.printText("> Количество уменьшено");
         else this.view.printText("> Игрушка удалена");
     }
-    public void changeWeightToy(){
+
+    public void changeWeightToy() {
         this.view.printText("> Выберите игрушку и укажите новый вес");
         this.view.printPresents(this.model.actualPresents);
         int index = this.view.getIndexToy(this.model.actualPresents.presents);
@@ -57,7 +59,8 @@ public class Presenter {
         this.model.writeToFile();
         this.view.printText("> Вес изменен");
     }
-    public void addToy(){
+
+    public void addToy() {
         this.view.printText("> Добавление новой игрушки");
         this.model.actualPresents.addToy(
                 this.view.getNameToy(2),
@@ -67,20 +70,39 @@ public class Presenter {
         this.model.writeToFile();
         this.view.printText("> Игрушка добавлена");
     }
-    public void delToy(){
+
+    public void delToy() {
         this.view.printText("> Выберите игрушку для удаления");
         this.view.printPresents(this.model.actualPresents);
         int index = this.view.getIndexToy(this.model.actualPresents.presents);
-        this.model.actualPresents.delToy(index);
-        this.model.writeToFile();
-        this.view.printText("> Игрушка удалена");
+        this.view.printText("> Удалить игрушку?");
+        if (this.view.confirmAction()) {
+            this.model.actualPresents.delToy(index);
+            this.model.writeToFile();
+            this.view.printText("> Игрушка удалена");
+        } else this.view.printText("> Игрушка не удалена");
     }
-    public void showTotalCountToys(){
+
+    public void showTotalCountToys() {
         int count = this.model.actualPresents.getTotalCountToys();
         this.view.printText(String.format("> Количество оставшихся призов: %d шт.", count));
     }
 
-    private int getIndexRandomPrize(){
+    public boolean isEmptyDB() {
+        if (this.model.actualPresents.size == 0) return true;
+        return false;
+    }
+
+    public boolean isEmptyLog() {
+        if (this.log.prizes.size() == 0) return true;
+        return false;
+    }
+
+    public void showPresents() {
+        this.view.printPresents(this.model.actualPresents);
+    }
+
+    private int getIndexRandomPrize() {
         int[] chances = model.actualPresents.getWeightAll();
         int len = chances.length - 2; // послед элемент (sum)
         int choice = rand.nextInt(1, chances[len + 1] + 1);
