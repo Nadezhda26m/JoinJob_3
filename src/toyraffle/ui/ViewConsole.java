@@ -17,7 +17,8 @@ public class ViewConsole implements View {
         String name = scan.nextLine();
         if (name.length() >= minCountChars)
             return name;
-        System.out.printf("Должно быть не меньше %d символов, повторите ввод\n", minCountChars);
+        System.out.printf("Должно быть не меньше %d символов, " +
+                "повторите ввод\n", minCountChars);
         return getNameToy(minCountChars);
     }
 
@@ -104,7 +105,7 @@ public class ViewConsole implements View {
 
     @Override
     public void printCommands(String[] commands) {
-        System.out.println("Список команд: ");
+        System.out.println("\nСписок команд: ");
         int size = commands.length;
         for (int i = 0; i < size; i++) {
             System.out.printf("%d. %s\n", i + 1, commands[i]);
