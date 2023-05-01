@@ -29,10 +29,13 @@ public class Presents {
         this.presents.get(index).increaseCount(countAdd);
     }
 
-    protected void decreaseCountToy(int index, int countDel) {
+    protected boolean decreaseCountToy(int index, int countDel) {
         this.presents.get(index).decreaseCount(countDel);
-        if (this.presents.get(index).count == 0)
+        if (this.presents.get(index).count == 0) {
             this.delToy(index);
+            return false;
+        }
+        return true;
     }
 
     protected int getTotalCountToys() {
@@ -43,7 +46,7 @@ public class Presents {
         return count;
     }
 
-    protected void changeWeightToy(int index, int newWeight){
+    protected void changeWeightToy(int index, int newWeight) {
         this.presents.get(index).changeWeight(newWeight);
     }
 
@@ -53,15 +56,6 @@ public class Presents {
         if (toy.count == 0)
             this.delToy(index);
         return toy;
-    }
-
-    protected int findIndex(int idToy) {
-        for (int i = 0; i < this.size; i++) {
-            if (this.presents.get(i).id == idToy) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -77,17 +71,31 @@ public class Presents {
         return presents;
     }
 
-    public void setSourceData(ArrayList<Toy> list){
+    public void setSourceData(ArrayList<Toy> list) {
         this.presents = list;
         this.size = list.size();
         this.id = this.determineId(list);
     }
 
-    private int determineId(ArrayList<Toy> list){
+    private int determineId(ArrayList<Toy> list) {
         int maxId = 0;
         for (Toy toy : list) {
             if (toy.id > maxId) maxId = toy.id;
         }
         return maxId + 1;
+    }
+
+    protected int[] getWeightAll() {
+        if (this.size > 0) {
+            int[] chances = new int[this.size + 1];
+            int sum = 0;
+            for (int i = 0; i < this.size; i++) {
+                chances[i] = this.presents.get(i).weight;
+                sum += chances[i];
+            }
+            chances[this.size] = sum;
+            return chances;
+        }
+        return new int[0];
     }
 }
